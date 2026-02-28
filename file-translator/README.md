@@ -13,7 +13,7 @@
 
 ## 本地启动（队列版）
 ```bash
-cd kb/projects/file-translator
+cd file-translator
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -31,7 +31,7 @@ file-translator-web
 
 ## Docker Compose 启动
 ```bash
-cd kb/projects/file-translator
+cd file-translator
 docker compose up --build
 ```
 
