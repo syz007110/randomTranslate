@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>File Translator</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; }
+      .card { border: 1px solid #ddd; border-radius: 10px; padding: 16px; }
+      label { display:block; margin-top: 12px; font-weight: 600; }
+      input, select, button { margin-top: 6px; padding: 8px; width: 100%; box-sizing: border-box; }
+      button { cursor: pointer; }
+      .hint { color: #666; font-size: 13px; margin-top: 8px; }
+      #status { margin-top: 12px; }
+    </style>
+  </head>
+  <body>
+    <h2>File Translator v0.2</h2>
+    <div class="card">
+      <form id="taskForm">
+        <label>文件（docx/md/json/txt）</label>
+        <input type="file" name="file" required />
+
+        <label>源语言（src）</label>
+        <input name="src_lang" placeholder="zh-CN" required />
+
+        <label>目标语言（tgt）</label>
+        <input name="tgt_lang" placeholder="en" required />
+
+        <label>引擎（engine）</label>
+        <select name="engine">
+          <option value="mock">mock</option>
+          <option value="deepl">deepl</option>
+          <option value="google">google</option>
+        </select>
+
+        <label>领域（domain，可选）</label>
+        <input name="domain" placeholder="surgical_robotics" />
+
+        <label>块级并发（max_workers）</label>
+        <input name="max_workers" type="number" min="1" max="16" value="4" />
+
+        <button type="submit">提交异步翻译任务</button>
+      </form>
+      <div id="status" class="hint"></div>
+    </div>
+
+    <script>
+      const form = document.getElementById('taskForm');
+      const statusDiv = document.getElementById('status');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        statusDiv.textContent = '正在提交任务...';
+        const fd = new FormData(form);
+        const resp = await fetch('/api/tasks', { method: 'POST', body: fd });
+        if (!resp.ok) {
+          statusDiv.textContent = '提交失败';
+          return;
+        }
+        const data = await resp.json();
+        const taskId = data.task_id;
+        statusDiv.textContent = `任务已提交: ${taskId}`;
+
+        const timer = setInterval(async () => {
+          const r = await fetch(`/api/tasks/${taskId}`);
+          const s = await r.json();
+          statusDiv.textContent = `任务状态: ${s.status}`;
+          if (s.status === 'finished') {
+            clearInterval(timer);
+            window.location.href = `/api/tasks/${taskId}/download`;
+          }
+          if (s.status === 'failed') {
+            clearInterval(timer);
+            statusDiv.textContent = `任务失败: ${s.error || 'unknown error'}`;
+          }
+        }, 1500);
+      });
+    </script>
+  </body>
+</html>

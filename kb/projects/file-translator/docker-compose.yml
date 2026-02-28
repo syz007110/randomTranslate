@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    container_name: file-translator-api
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DEEPL_API_KEY=${DEEPL_API_KEY:-}
+      - GOOGLE_TRANSLATE_API_KEY=${GOOGLE_TRANSLATE_API_KEY:-}
+    depends_on:
+      - redis
+    ports:
+      - "8088:8088"
+    command: ["file-translator-web"]
+
+  worker:
+    build: .
+    container_name: file-translator-worker
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DEEPL_API_KEY=${DEEPL_API_KEY:-}
+      - GOOGLE_TRANSLATE_API_KEY=${GOOGLE_TRANSLATE_API_KEY:-}
+    depends_on:
+      - redis
+    command: ["file-translator-worker"]
