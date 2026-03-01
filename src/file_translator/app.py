@@ -6,8 +6,6 @@ from pathlib import Path
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
-from redis import Redis
-from rq import Queue
 from starlette.requests import Request
 
 from .core import DB_PATH, translate_file
@@ -21,7 +19,14 @@ TEMPLATES = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 REDIS_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0")
 
 
-def _get_queue() -> Queue:
+def _get_queue():
+    # Lazy import: avoid RQ fork-context import issues on Windows when queue mode is unused.
+    try:
+        from redis import Redis
+        from rq import Queue
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Queue mode unavailable on this runtime: {e}")
+
     redis_conn = Redis.from_url(REDIS_URL)
     return Queue("file-translator", connection=redis_conn)
 

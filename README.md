@@ -4,7 +4,8 @@
 
 ## v0.2（可用版）
 - 前后端可用（Web UI + API + Worker）
-- 队列机制：Redis + RQ
+- 默认同步模式（无需 Redis，Windows 友好）
+- 队列机制：Redis + RQ（可选）
 - 分块并发翻译（`max_workers`）
 - 术语库 + 翻译缓存（SQLite）
 - 引擎：`xfyun`（默认）+ `llm_kimi`（手动切换）

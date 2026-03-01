@@ -11,13 +11,12 @@
       input, select, button { margin-top: 6px; padding: 8px; width: 100%; box-sizing: border-box; }
       button { cursor: pointer; }
       .hint { color: #666; font-size: 13px; margin-top: 8px; }
-      #status { margin-top: 12px; }
     </style>
   </head>
   <body>
-    <h2>File Translator v0.2</h2>
+    <h2>File Translator</h2>
     <div class="card">
-      <form id="taskForm">
+      <form action="/translate" method="post" enctype="multipart/form-data">
         <label>文件（docx/md/json/txt）</label>
         <input type="file" name="file" required />
 
@@ -40,42 +39,9 @@
         <label>块级并发（max_workers）</label>
         <input name="max_workers" type="number" min="1" max="16" value="4" />
 
-        <button type="submit">提交异步翻译任务</button>
+        <button type="submit">开始翻译并下载</button>
       </form>
-      <div id="status" class="hint"></div>
+      <div class="hint">当前页面默认走同步翻译接口（无需 Redis），更适合 Windows 本地快速启动。</div>
     </div>
-
-    <script>
-      const form = document.getElementById('taskForm');
-      const statusDiv = document.getElementById('status');
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        statusDiv.textContent = '正在提交任务...';
-        const fd = new FormData(form);
-        const resp = await fetch('/api/tasks', { method: 'POST', body: fd });
-        if (!resp.ok) {
-          statusDiv.textContent = '提交失败';
-          return;
-        }
-        const data = await resp.json();
-        const taskId = data.task_id;
-        statusDiv.textContent = `任务已提交: ${taskId}`;
-
-        const timer = setInterval(async () => {
-          const r = await fetch(`/api/tasks/${taskId}`);
-          const s = await r.json();
-          statusDiv.textContent = `任务状态: ${s.status}`;
-          if (s.status === 'finished') {
-            clearInterval(timer);
-            window.location.href = `/api/tasks/${taskId}/download`;
-          }
-          if (s.status === 'failed') {
-            clearInterval(timer);
-            statusDiv.textContent = `任务失败: ${s.error || 'unknown error'}`;
-          }
-        }, 1500);
-      });
-    </script>
   </body>
 </html>
