@@ -10,8 +10,10 @@ services:
     container_name: file-translator-api
     environment:
       - REDIS_URL=redis://redis:6379/0
-      - DEEPL_API_KEY=${DEEPL_API_KEY:-}
-      - GOOGLE_TRANSLATE_API_KEY=${GOOGLE_TRANSLATE_API_KEY:-}
+      - XFYUN_APP_ID=${XFYUN_APP_ID:-}
+      - XFYUN_API_KEY=${XFYUN_API_KEY:-}
+      - XFYUN_API_SECRET=${XFYUN_API_SECRET:-}
+      - XFYUN_TRANSLATE_URL=${XFYUN_TRANSLATE_URL:-https://ntrans.xfyun.cn/v2/ots}
       - KIMI_API_KEY=${KIMI_API_KEY:-}
       - KIMI_BASE_URL=${KIMI_BASE_URL:-https://api.moonshot.cn/v1}
       - KIMI_MODEL=${KIMI_MODEL:-moonshot-v1-8k}
@@ -26,8 +28,10 @@ services:
     container_name: file-translator-worker
     environment:
       - REDIS_URL=redis://redis:6379/0
-      - DEEPL_API_KEY=${DEEPL_API_KEY:-}
-      - GOOGLE_TRANSLATE_API_KEY=${GOOGLE_TRANSLATE_API_KEY:-}
+      - XFYUN_APP_ID=${XFYUN_APP_ID:-}
+      - XFYUN_API_KEY=${XFYUN_API_KEY:-}
+      - XFYUN_API_SECRET=${XFYUN_API_SECRET:-}
+      - XFYUN_TRANSLATE_URL=${XFYUN_TRANSLATE_URL:-https://ntrans.xfyun.cn/v2/ots}
       - KIMI_API_KEY=${KIMI_API_KEY:-}
       - KIMI_BASE_URL=${KIMI_BASE_URL:-https://api.moonshot.cn/v1}
       - KIMI_MODEL=${KIMI_MODEL:-moonshot-v1-8k}

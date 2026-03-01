@@ -7,7 +7,7 @@
 - 文档分块并发翻译（`max_workers`）
 - SQLite 术语库（概念中心模型）
 - SQLite 翻译缓存（避免重复消耗）
-- 翻译引擎：`mock / deepl / google / llm_kimi`
+- 翻译引擎：`mock / xfyun / llm_kimi`
 
 ## 本地启动（队列版）
 ```bash
@@ -32,8 +32,10 @@ docker compose up --build
 ```
 
 如需真实翻译引擎，设置环境变量：
-- `DEEPL_API_KEY`
-- `GOOGLE_TRANSLATE_API_KEY`
+- `XFYUN_APP_ID`
+- `XFYUN_API_KEY`
+- `XFYUN_API_SECRET`
+- `XFYUN_TRANSLATE_URL`（可选，默认 `https://ntrans.xfyun.cn/v2/ots`）
 - `KIMI_API_KEY`
 - `KIMI_BASE_URL`（可选，默认 `https://api.moonshot.cn/v1`）
 - `KIMI_MODEL`（可选，默认 `moonshot-v1-8k`）

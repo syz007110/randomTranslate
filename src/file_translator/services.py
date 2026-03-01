@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import base64
 import hashlib
+import hmac
+import json
 import os
 import re
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
+from urllib.parse import urlparse
 
 import requests
 
@@ -85,33 +89,71 @@ def _translate_mock(text: str, src_lang: str, tgt_lang: str) -> str:
     return f"[{src_lang}->{tgt_lang}] {text}"
 
 
-def _translate_deepl(text: str, src_lang: str, tgt_lang: str) -> str:
-    api_key = os.getenv("DEEPL_API_KEY")
-    if not api_key:
-        raise RuntimeError("DEEPL_API_KEY is not set")
-    url = "https://api-free.deepl.com/v2/translate"
+def _translate_xfyun(text: str, src_lang: str, tgt_lang: str) -> str:
+    app_id = os.getenv("XFYUN_APP_ID")
+    api_key = os.getenv("XFYUN_API_KEY")
+    api_secret = os.getenv("XFYUN_API_SECRET")
+    endpoint = os.getenv("XFYUN_TRANSLATE_URL", "https://ntrans.xfyun.cn/v2/ots")
+
+    if not app_id or not api_key or not api_secret:
+        raise RuntimeError("XFYUN_APP_ID / XFYUN_API_KEY / XFYUN_API_SECRET must be set")
+
+    u = urlparse(endpoint)
+    host = u.netloc
+    path = u.path or "/v2/ots"
+
+    now = datetime.now(timezone.utc)
+    date_str = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
+
+    body = {
+        "common": {"app_id": app_id},
+        "business": {"from": src_lang, "to": tgt_lang},
+        "data": {"text": base64.b64encode(text.encode("utf-8")).decode("utf-8")},
+    }
+    body_bytes = json.dumps(body, ensure_ascii=False).encode("utf-8")
+
+    digest_raw = hashlib.sha256(body_bytes).digest()
+    digest = "SHA-256=" + base64.b64encode(digest_raw).decode("utf-8")
+
+    sign_origin = f"host: {host}\ndate: {date_str}\nPOST {path} HTTP/1.1\ndigest: {digest}"
+    signature = base64.b64encode(
+        hmac.new(api_secret.encode("utf-8"), sign_origin.encode("utf-8"), hashlib.sha256).digest()
+    ).decode("utf-8")
+
+    authorization = (
+        f'api_key="{api_key}", algorithm="hmac-sha256", '
+        f'headers="host date request-line digest", signature="{signature}"'
+    )
+
     resp = requests.post(
-        url,
-        data={"text": text, "source_lang": src_lang.upper(), "target_lang": tgt_lang.upper()},
-        headers={"Authorization": f"DeepL-Auth-Key {api_key}"},
-        timeout=60,
+        endpoint,
+        data=body_bytes,
+        headers={
+            "Content-Type": "application/json",
+            "Host": host,
+            "Date": date_str,
+            "Digest": digest,
+            "Authorization": authorization,
+        },
+        timeout=90,
     )
     resp.raise_for_status()
-    return resp.json()["translations"][0]["text"]
+    data = resp.json()
 
+    code = data.get("code", 0)
+    if code != 0:
+        raise RuntimeError(f"XFYUN API error: code={code}, message={data.get('message')}")
 
-def _translate_google(text: str, src_lang: str, tgt_lang: str) -> str:
-    api_key = os.getenv("GOOGLE_TRANSLATE_API_KEY")
-    if not api_key:
-        raise RuntimeError("GOOGLE_TRANSLATE_API_KEY is not set")
-    url = f"https://translation.googleapis.com/language/translate/v2?key={api_key}"
-    resp = requests.post(
-        url,
-        json={"q": text, "source": src_lang, "target": tgt_lang, "format": "text"},
-        timeout=60,
-    )
-    resp.raise_for_status()
-    return resp.json()["data"]["translations"][0]["translatedText"]
+    try:
+        dst = data["data"]["result"]["trans_result"]["dst"]
+        return dst
+    except Exception:
+        # 兼容部分返回结构
+        try:
+            dst_b64 = data["data"]["result"]["trans_result"]["dst"]
+            return base64.b64decode(dst_b64).decode("utf-8")
+        except Exception as e:
+            raise RuntimeError(f"Unexpected XFYUN response: {data}") from e
 
 
 def _translate_kimi(text: str, src_lang: str, tgt_lang: str) -> str:
@@ -164,10 +206,8 @@ def translate_via_engine(text: str, src_lang: str, tgt_lang: str, engine: str) -
     engine = (engine or "mock").lower()
     if engine == "mock":
         return _translate_mock(text, src_lang, tgt_lang)
-    if engine == "deepl":
-        return _translate_deepl(text, src_lang, tgt_lang)
-    if engine == "google":
-        return _translate_google(text, src_lang, tgt_lang)
+    if engine == "xfyun":
+        return _translate_xfyun(text, src_lang, tgt_lang)
     if engine in {"kimi", "llm_kimi"}:
         return _translate_kimi(text, src_lang, tgt_lang)
     raise RuntimeError(f"Unsupported engine: {engine}")
