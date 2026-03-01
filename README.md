@@ -7,11 +7,10 @@
 - 文档分块并发翻译（`max_workers`）
 - SQLite 术语库（概念中心模型）
 - SQLite 翻译缓存（避免重复消耗）
-- 翻译引擎：`mock / deepl / google`
+- 翻译引擎：`mock / deepl / google / llm_kimi`
 
 ## 本地启动（队列版）
 ```bash
-cd file-translator
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -29,11 +28,13 @@ file-translator-web
 
 ## Docker Compose 启动
 ```bash
-cd file-translator
 docker compose up --build
 ```
 
 如需真实翻译引擎，设置环境变量：
 - `DEEPL_API_KEY`
 - `GOOGLE_TRANSLATE_API_KEY`
+- `KIMI_API_KEY`
+- `KIMI_BASE_URL`（可选，默认 `https://api.moonshot.cn/v1`）
+- `KIMI_MODEL`（可选，默认 `moonshot-v1-8k`）
 

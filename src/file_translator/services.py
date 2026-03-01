@@ -114,6 +114,52 @@ def _translate_google(text: str, src_lang: str, tgt_lang: str) -> str:
     return resp.json()["data"]["translations"][0]["translatedText"]
 
 
+def _translate_kimi(text: str, src_lang: str, tgt_lang: str) -> str:
+    api_key = os.getenv("KIMI_API_KEY")
+    if not api_key:
+        raise RuntimeError("KIMI_API_KEY is not set")
+
+    base_url = os.getenv("KIMI_BASE_URL", "https://api.moonshot.cn/v1").rstrip("/")
+    model = os.getenv("KIMI_MODEL", "moonshot-v1-8k")
+    url = f"{base_url}/chat/completions"
+
+    system_prompt = (
+        "You are a professional translation engine. "
+        "Translate the user text from source language to target language accurately. "
+        "Return translation only, no explanations."
+    )
+
+    user_prompt = (
+        f"source_language={src_lang}\n"
+        f"target_language={tgt_lang}\n"
+        "text:\n"
+        f"{text}"
+    )
+
+    resp = requests.post(
+        url,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "model": model,
+            "temperature": 0,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+        },
+        timeout=90,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    try:
+        return data["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        raise RuntimeError(f"Unexpected Kimi response: {data}") from e
+
+
 def translate_via_engine(text: str, src_lang: str, tgt_lang: str, engine: str) -> str:
     engine = (engine or "mock").lower()
     if engine == "mock":
@@ -122,4 +168,6 @@ def translate_via_engine(text: str, src_lang: str, tgt_lang: str, engine: str) -
         return _translate_deepl(text, src_lang, tgt_lang)
     if engine == "google":
         return _translate_google(text, src_lang, tgt_lang)
+    if engine in {"kimi", "llm_kimi"}:
+        return _translate_kimi(text, src_lang, tgt_lang)
     raise RuntimeError(f"Unsupported engine: {engine}")

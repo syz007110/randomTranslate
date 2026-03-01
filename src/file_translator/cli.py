@@ -12,7 +12,7 @@ def main() -> None:
     ap.add_argument("output", help="output file path")
     ap.add_argument("--src", required=True, help="source language, e.g. zh-CN")
     ap.add_argument("--tgt", required=True, help="target language, e.g. en")
-    ap.add_argument("--engine", default="mock", help="translation engine key: mock|deepl|google")
+    ap.add_argument("--engine", default="mock", help="translation engine key: mock|deepl|google|llm_kimi")
     ap.add_argument("--domain", default=None, help="terminology domain")
     ap.add_argument("--max-workers", type=int, default=4)
 

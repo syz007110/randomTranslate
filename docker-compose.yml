@@ -12,6 +12,9 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - DEEPL_API_KEY=${DEEPL_API_KEY:-}
       - GOOGLE_TRANSLATE_API_KEY=${GOOGLE_TRANSLATE_API_KEY:-}
+      - KIMI_API_KEY=${KIMI_API_KEY:-}
+      - KIMI_BASE_URL=${KIMI_BASE_URL:-https://api.moonshot.cn/v1}
+      - KIMI_MODEL=${KIMI_MODEL:-moonshot-v1-8k}
     depends_on:
       - redis
     ports:
@@ -25,6 +28,9 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - DEEPL_API_KEY=${DEEPL_API_KEY:-}
       - GOOGLE_TRANSLATE_API_KEY=${GOOGLE_TRANSLATE_API_KEY:-}
+      - KIMI_API_KEY=${KIMI_API_KEY:-}
+      - KIMI_BASE_URL=${KIMI_BASE_URL:-https://api.moonshot.cn/v1}
+      - KIMI_MODEL=${KIMI_MODEL:-moonshot-v1-8k}
     depends_on:
       - redis
     command: ["file-translator-worker"]
