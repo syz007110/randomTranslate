@@ -11,12 +11,19 @@
       input, select, button { margin-top: 6px; padding: 8px; width: 100%; box-sizing: border-box; }
       button { cursor: pointer; }
       .hint { color: #666; font-size: 13px; margin-top: 8px; }
+      #status { margin-top: 12px; }
     </style>
   </head>
   <body>
     <h2>File Translator</h2>
     <div class="card">
-      <form action="/translate" method="post" enctype="multipart/form-data">
+      <form id="taskForm">
+        <label>运行模式</label>
+        <select name="run_mode" id="run_mode">
+          <option value="sync" selected>同步（默认，无需Redis）</option>
+          <option value="queue">队列（Redis + Worker）</option>
+        </select>
+
         <label>文件（docx/md/json/txt）</label>
         <input type="file" name="file" required />
 
@@ -39,9 +46,66 @@
         <label>块级并发（max_workers）</label>
         <input name="max_workers" type="number" min="1" max="16" value="4" />
 
-        <button type="submit">开始翻译并下载</button>
+        <button type="submit">开始翻译</button>
       </form>
-      <div class="hint">当前页面默认走同步翻译接口（无需 Redis），更适合 Windows 本地快速启动。</div>
+      <div id="status" class="hint"></div>
     </div>
+
+    <script>
+      const form = document.getElementById('taskForm');
+      const statusDiv = document.getElementById('status');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(form);
+        const mode = fd.get('run_mode');
+        fd.delete('run_mode');
+
+        if (mode === 'sync') {
+          statusDiv.textContent = '同步翻译中...';
+          const resp = await fetch('/translate', { method: 'POST', body: fd });
+          if (!resp.ok) {
+            statusDiv.textContent = '同步翻译失败';
+            return;
+          }
+          const blob = await resp.blob();
+          const fileName = (resp.headers.get('content-disposition') || '').split('filename=')[1]?.replaceAll('"','') || 'translated_output';
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          statusDiv.textContent = '同步翻译完成，已开始下载。';
+          return;
+        }
+
+        statusDiv.textContent = '队列任务提交中...';
+        const resp = await fetch('/api/tasks', { method: 'POST', body: fd });
+        if (!resp.ok) {
+          const text = await resp.text();
+          statusDiv.textContent = `队列任务提交失败：${text}`;
+          return;
+        }
+
+        const data = await resp.json();
+        const taskId = data.task_id;
+        statusDiv.textContent = `任务已提交: ${taskId}`;
+
+        const timer = setInterval(async () => {
+          const r = await fetch(`/api/tasks/${taskId}`);
+          const s = await r.json();
+          statusDiv.textContent = `任务状态: ${s.status}`;
+          if (s.status === 'finished') {
+            clearInterval(timer);
+            window.location.href = `/api/tasks/${taskId}/download`;
+          }
+          if (s.status === 'failed') {
+            clearInterval(timer);
+            statusDiv.textContent = `任务失败: ${s.error || 'unknown error'}`;
+          }
+        }, 1500);
+      });
+    </script>
   </body>
 </html>
