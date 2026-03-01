@@ -1,42 +1,59 @@
-# File Translator（独立工具项目）
+# File Translator
 
-## 当前能力（v0.2）
-- CLI 翻译入口（`file-translator`）
-- Web UI 页面（`file-translator-web`）
-- **异步队列任务**（Redis + RQ Worker）
-- 文档分块并发翻译（`max_workers`）
-- SQLite 术语库（概念中心模型）
-- SQLite 翻译缓存（避免重复消耗）
-- 翻译引擎：`mock / xfyun / llm_kimi`
+支持格式：`docx / md / json / txt`
 
-## 本地启动（队列版）
+## v0.2（可用版）
+- 前后端可用（Web UI + API + Worker）
+- 队列机制：Redis + RQ
+- 分块并发翻译（`max_workers`）
+- 术语库 + 翻译缓存（SQLite）
+- 引擎：`xfyun`（默认）+ `llm_kimi`（手动切换）
+
+## UI 使用说明
+- 页面可手动选择引擎（下拉框）
+- **默认是 `xfyun`**
+- 复杂文本可切 `llm_kimi`
+
+## 推荐启动方式（跨平台，含 Windows）
+### Docker Compose（推荐）
+1. 复制配置：
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .
-
-# 终端1：启动 redis（需本机已安装）
-redis-server
-
-# 终端2：启动 worker
-file-translator-worker
-
-# 终端3：启动 web
-file-translator-web
+cp .env.example .env
 ```
-打开：http://127.0.0.1:8088
+Windows PowerShell:
+```powershell
+copy .env.example .env
+```
 
-## Docker Compose 启动
+2. 编辑 `.env`，填入：
+- `XFYUN_APP_ID`
+- `XFYUN_API_KEY`
+- `XFYUN_API_SECRET`
+- `KIMI_API_KEY`
+
+3. 启动：
 ```bash
 docker compose up --build
 ```
 
-如需真实翻译引擎，设置环境变量：
-- `XFYUN_APP_ID`
-- `XFYUN_API_KEY`
-- `XFYUN_API_SECRET`
-- `XFYUN_TRANSLATE_URL`（可选，默认 `https://ntrans.xfyun.cn/v2/ots`）
-- `KIMI_API_KEY`
-- `KIMI_BASE_URL`（可选，默认 `https://api.moonshot.cn/v1`）
-- `KIMI_MODEL`（可选，默认 `moonshot-v1-8k`）
+4. 访问：
+`http://127.0.0.1:8088`
 
+> 这个方式在 Windows 上最省心，不需要你手动安装 Redis。
+
+## 本地启动（不使用 Docker）
+### Linux/macOS
+```bash
+bash scripts/start-local.sh
+```
+
+### Windows
+```bat
+scripts\start-local.bat
+```
+或
+```powershell
+.\scripts\start-local.ps1
+```
+
+> Windows 本地模式默认只启动 Web。要完整异步队列能力，建议优先用 Docker Compose。

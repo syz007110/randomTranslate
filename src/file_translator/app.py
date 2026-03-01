@@ -43,7 +43,7 @@ async def translate_sync(
     file: UploadFile = File(...),
     src_lang: str = Form(...),
     tgt_lang: str = Form(...),
-    engine: str = Form("mock"),
+    engine: str = Form("xfyun"),
     domain: str = Form(""),
     max_workers: int = Form(4),
 ):
@@ -66,7 +66,7 @@ async def create_task(
     file: UploadFile = File(...),
     src_lang: str = Form(...),
     tgt_lang: str = Form(...),
-    engine: str = Form("mock"),
+    engine: str = Form("xfyun"),
     domain: str = Form(""),
     max_workers: int = Form(4),
 ):
