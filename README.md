@@ -2,59 +2,47 @@
 
 支持格式：`docx / md / json / txt`
 
-## v0.2（可用版）
+## v0.3（可用版）
 - 前后端可用（Web UI + API + Worker）
-- 默认队列模式（Redis + RQ）
-- 队列不可用时自动回退同步模式（Windows 友好）
+- 默认队列模式（Redis）
+- 队列不可用时自动回退同步模式
 - 分块并发翻译（`max_workers`）
 - 术语库 + 翻译缓存（SQLite）
-- 引擎：`xfyun`（默认）+ `llm_kimi`（手动切换）
+- 引擎：`xfyun`（默认）+ `llm_kimi`
 
 ## UI 使用说明
-- 页面可手动选择引擎（下拉框）
-- **默认是 `xfyun`**
+- 引擎可手动切换
+- 默认 `xfyun`
 - 复杂文本可切 `llm_kimi`
 
-## 推荐启动方式（跨平台，含 Windows）
-### Docker Compose（推荐）
+## 部署策略（你当前环境）
+- **Windows**：原生部署（不使用 Docker）+ Redis
+- **Ubuntu**：Docker 部署（api + redis + worker）
+
+---
+
+## Ubuntu（Docker）
 1. 复制配置：
 ```bash
 cp .env.example .env
 ```
-Windows PowerShell:
-```powershell
-copy .env.example .env
-```
-
-2. 编辑 `.env`，填入：
+2. 编辑 `.env`：
 - `XFYUN_APP_ID`
 - `XFYUN_API_KEY`
 - `XFYUN_API_SECRET`
 - `KIMI_API_KEY`
-
 3. 启动：
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
+4. 访问：`http://<ubuntu-ip>:8088`
 
-4. 访问：
-`http://127.0.0.1:8088`
-
-> 这个方式在 Windows 上最省心，不需要你手动安装 Redis。
-
-## 本地启动（不使用 Docker）
-### Linux/macOS
-```bash
-bash scripts/start-local.sh
-```
-
-### Windows
+## Windows（原生 + Redis）
+1. 安装并启动 Redis（本机或可访问的 Redis）
+2. 在项目根目录执行：
 ```bat
 scripts\start-local.bat
 ```
-或
-```powershell
-.\scripts\start-local.ps1
-```
+3. 访问：`http://127.0.0.1:8088`
 
-> Windows 本地模式默认只启动 Web。要完整异步队列能力，建议优先用 Docker Compose。
+> 若 Redis/Worker 暂不可用，UI 会自动回退到同步翻译模式，仍可使用。
