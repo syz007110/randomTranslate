@@ -9,7 +9,7 @@ import re
 import sqlite3
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from urllib.parse import urlparse
+from urllib.parse import quote, urlencode, urlparse
 
 import requests
 
@@ -89,71 +89,84 @@ def _translate_mock(text: str, src_lang: str, tgt_lang: str) -> str:
     return f"[{src_lang}->{tgt_lang}] {text}"
 
 
+def _map_xfyun_lang(lang: str) -> str:
+    l = (lang or "").lower()
+    mapping = {
+        "zh": "cn",
+        "zh-cn": "cn",
+        "zh_cn": "cn",
+        "en-us": "en",
+        "en_us": "en",
+        "jp": "ja",
+    }
+    return mapping.get(l, l)
+
+
 def _translate_xfyun(text: str, src_lang: str, tgt_lang: str) -> str:
     app_id = os.getenv("XFYUN_APP_ID")
     api_key = os.getenv("XFYUN_API_KEY")
     api_secret = os.getenv("XFYUN_API_SECRET")
-    endpoint = os.getenv("XFYUN_TRANSLATE_URL", "https://ntrans.xfyun.cn/v2/ots")
+    endpoint = os.getenv("XFYUN_TRANSLATE_URL", "https://itrans.xf-yun.com/v1/its")
 
     if not app_id or not api_key or not api_secret:
         raise RuntimeError("XFYUN_APP_ID / XFYUN_API_KEY / XFYUN_API_SECRET must be set")
 
     u = urlparse(endpoint)
     host = u.netloc
-    path = u.path or "/v2/ots"
+    path = u.path or "/v1/its"
 
     now = datetime.now(timezone.utc)
     date_str = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-    body = {
-        "common": {"app_id": app_id},
-        "business": {"from": src_lang, "to": tgt_lang},
-        "data": {"text": base64.b64encode(text.encode("utf-8")).decode("utf-8")},
-    }
-    body_bytes = json.dumps(body, ensure_ascii=False).encode("utf-8")
-
-    digest_raw = hashlib.sha256(body_bytes).digest()
-    digest = "SHA-256=" + base64.b64encode(digest_raw).decode("utf-8")
-
-    sign_origin = f"host: {host}\ndate: {date_str}\nPOST {path} HTTP/1.1\ndigest: {digest}"
+    request_line = f"POST {path} HTTP/1.1"
+    signature_origin = f"host: {host}\ndate: {date_str}\n{request_line}"
     signature = base64.b64encode(
-        hmac.new(api_secret.encode("utf-8"), sign_origin.encode("utf-8"), hashlib.sha256).digest()
+        hmac.new(api_secret.encode("utf-8"), signature_origin.encode("utf-8"), hashlib.sha256).digest()
     ).decode("utf-8")
 
-    authorization = (
+    authorization_origin = (
         f'api_key="{api_key}", algorithm="hmac-sha256", '
-        f'headers="host date request-line digest", signature="{signature}"'
+        f'headers="host date request-line", signature="{signature}"'
     )
+    authorization = base64.b64encode(authorization_origin.encode("utf-8")).decode("utf-8")
 
-    resp = requests.post(
-        endpoint,
-        data=body_bytes,
-        headers={
-            "Content-Type": "application/json",
-            "Host": host,
-            "Date": date_str,
-            "Digest": digest,
-            "Authorization": authorization,
+    query = urlencode({"authorization": authorization, "host": host, "date": date_str}, quote_via=quote)
+    url = f"{endpoint}?{query}"
+
+    from_lang = _map_xfyun_lang(src_lang)
+    to_lang = _map_xfyun_lang(tgt_lang)
+
+    body = {
+        "header": {"app_id": app_id, "status": 3},
+        "parameter": {"its": {"from": from_lang, "to": to_lang, "result": {}}},
+        "payload": {
+            "input_data": {
+                "encoding": "utf8",
+                "status": 3,
+                "text": base64.b64encode(text.encode("utf-8")).decode("utf-8"),
+            }
         },
-        timeout=90,
-    )
-    resp.raise_for_status()
-    data = resp.json()
+    }
 
-    code = data.get("code", 0)
+    resp = requests.post(url, json=body, timeout=90)
+    try:
+        resp.raise_for_status()
+    except Exception as e:
+        raise RuntimeError(f"XFYUN HTTP error {resp.status_code}: {resp.text[:500]}") from e
+
+    data = resp.json()
+    header = data.get("header", {})
+    code = header.get("code", -1)
     if code != 0:
-        raise RuntimeError(f"XFYUN API error: code={code}, message={data.get('message')}")
+        raise RuntimeError(f"XFYUN API error: code={code}, message={header.get('message')}, sid={header.get('sid')}")
 
     try:
-        dst = data["data"]["result"]["trans_result"]["dst"]
-        return dst
-    except Exception:
-        # 兼容部分返回结构
-        try:
-            dst_b64 = data["data"]["result"]["trans_result"]["dst"]
-            return base64.b64decode(dst_b64).decode("utf-8")
-        except Exception as e:
-            raise RuntimeError(f"Unexpected XFYUN response: {data}") from e
+        text_b64 = data["payload"]["result"]["text"]
+        decoded = base64.b64decode(text_b64).decode("utf-8")
+        decoded_json = json.loads(decoded)
+        return decoded_json["trans_result"]["dst"]
+    except Exception as e:
+        raise RuntimeError(f"Unexpected XFYUN response: {data}") from e
 
 
 def _translate_kimi(text: str, src_lang: str, tgt_lang: str) -> str:

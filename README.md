@@ -30,6 +30,7 @@ cp .env.example .env
 - `XFYUN_APP_ID`
 - `XFYUN_API_KEY`
 - `XFYUN_API_SECRET`
+- `XFYUN_TRANSLATE_URL`（默认 `https://itrans.xf-yun.com/v1/its`）
 - `KIMI_API_KEY`
 3. 启动：
 ```bash
