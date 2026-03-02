@@ -5,6 +5,11 @@ __pycache__/
 *.pyd
 *.egg-info/
 .venv/
+.venv_test/
+
+# Secrets
+.env
+.env.*
 
 # OS/editor
 .DS_Store
