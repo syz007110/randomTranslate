@@ -315,10 +315,56 @@ def translate_via_engine(text: str, src_lang: str, tgt_lang: str, engine: str) -
     raise RuntimeError(f"Unsupported engine: {engine}")
 
 
+def _translate_xfyun_batch(texts: list[str], src_lang: str, tgt_lang: str, max_chars: int = 3800) -> list[str]:
+    # Merge short chunks to reduce round-trips; fallback to single-call when split is unsafe.
+    sep = "<<<FTSEP>>>"
+    out = [""] * len(texts)
+
+    batch_idx = []
+    batch_texts = []
+    cur_len = 0
+
+    def flush():
+        nonlocal batch_idx, batch_texts, cur_len
+        if not batch_texts:
+            return
+        merged = sep.join(batch_texts)
+        translated = _translate_xfyun(merged, src_lang, tgt_lang)
+        parts = translated.split(sep)
+        if len(parts) == len(batch_texts):
+            for i, p in zip(batch_idx, parts):
+                out[i] = p
+        else:
+            # separator not preserved; fallback item-by-item for correctness
+            for i, t in zip(batch_idx, batch_texts):
+                out[i] = _translate_xfyun(t, src_lang, tgt_lang)
+        batch_idx, batch_texts, cur_len = [], [], 0
+
+    for i, t in enumerate(texts):
+        if not t:
+            out[i] = t
+            continue
+        if len(t) >= max_chars:
+            flush()
+            out[i] = _translate_xfyun(t, src_lang, tgt_lang)
+            continue
+        extra = len(t) + (len(sep) if batch_texts else 0)
+        if cur_len + extra > max_chars:
+            flush()
+        batch_idx.append(i)
+        batch_texts.append(t)
+        cur_len += extra
+
+    flush()
+    return out
+
+
 def translate_many_via_engine(texts: list[str], src_lang: str, tgt_lang: str, engine: str) -> list[str]:
     engine = (engine or "mock").lower()
     if not texts:
         return []
     if engine in {"kimi", "llm_kimi"}:
         return _translate_kimi_batch(texts, src_lang, tgt_lang)
+    if engine == "xfyun":
+        return _translate_xfyun_batch(texts, src_lang, tgt_lang)
     return [translate_via_engine(t, src_lang, tgt_lang, engine) for t in texts]
