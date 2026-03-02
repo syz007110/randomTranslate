@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from .db import connect, init_schema
@@ -23,11 +24,18 @@ class Translator:
         self.tgt_lang = normalize_lang(tgt_lang)
         self.engine = engine
         self.domain = domain
+        self.glossary_version = os.getenv("TERM_GLOSSARY_VERSION", "v1")
 
     def __call__(self, text: str) -> str:
         conn = connect(DB_PATH)
         try:
-            req = TranslationRequest(text=text, src_lang=self.src_lang, tgt_lang=self.tgt_lang, engine=self.engine)
+            req = TranslationRequest(
+                text=text,
+                src_lang=self.src_lang,
+                tgt_lang=self.tgt_lang,
+                engine=self.engine,
+                glossary_version=self.glossary_version,
+            )
             cached = get_cached(conn, req)
             if cached is not None:
                 return cached
@@ -48,7 +56,13 @@ class Translator:
         conn = connect(DB_PATH)
         try:
             for i, text in enumerate(texts):
-                req = TranslationRequest(text=text, src_lang=self.src_lang, tgt_lang=self.tgt_lang, engine=self.engine)
+                req = TranslationRequest(
+                    text=text,
+                    src_lang=self.src_lang,
+                    tgt_lang=self.tgt_lang,
+                    engine=self.engine,
+                    glossary_version=self.glossary_version,
+                )
                 cached = get_cached(conn, req)
                 if cached is not None:
                     out[i] = cached
@@ -74,6 +88,7 @@ class Translator:
                         src_lang=self.src_lang,
                         tgt_lang=self.tgt_lang,
                         engine=self.engine,
+                        glossary_version=self.glossary_version,
                     )
                     save_cache(conn2, req, translated)
                     out[i] = translated
