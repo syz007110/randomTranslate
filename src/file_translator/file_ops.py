@@ -84,9 +84,53 @@ def translate_json(content: str, translate_fn, max_workers: int = 4) -> str:
     return json.dumps(obj, ensure_ascii=False, indent=2)
 
 
+def _collect_table_runs(table):
+    runs = []
+    for row in table.rows:
+        for cell in row.cells:
+            for p in cell.paragraphs:
+                for run in p.runs:
+                    if run.text and run.text.strip():
+                        runs.append(run)
+            # nested tables
+            for nested in cell.tables:
+                runs.extend(_collect_table_runs(nested))
+    return runs
+
+
+def _collect_docx_runs(doc):
+    runs = []
+    # body paragraphs
+    for p in doc.paragraphs:
+        for run in p.runs:
+            if run.text and run.text.strip():
+                runs.append(run)
+
+    # body tables
+    for table in doc.tables:
+        runs.extend(_collect_table_runs(table))
+
+    # headers/footers
+    for section in doc.sections:
+        for p in section.header.paragraphs:
+            for run in p.runs:
+                if run.text and run.text.strip():
+                    runs.append(run)
+        for t in section.header.tables:
+            runs.extend(_collect_table_runs(t))
+        for p in section.footer.paragraphs:
+            for run in p.runs:
+                if run.text and run.text.strip():
+                    runs.append(run)
+        for t in section.footer.tables:
+            runs.extend(_collect_table_runs(t))
+
+    return runs
+
+
 def translate_docx(in_path: Path, out_path: Path, translate_fn, max_workers: int = 4) -> None:
     doc = Document(str(in_path))
-    runs = [run for p in doc.paragraphs for run in p.runs if run.text and run.text.strip()]
+    runs = _collect_docx_runs(doc)
     texts = [r.text for r in runs]
     translated = _translate_many(texts, translate_fn, max_workers=max_workers)
     for run, t in zip(runs, translated):

@@ -7,6 +7,7 @@ import json
 import os
 import re
 import sqlite3
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from urllib.parse import quote, urlencode, urlparse
@@ -191,28 +192,44 @@ def _translate_kimi(text: str, src_lang: str, tgt_lang: str) -> str:
         f"{text}"
     )
 
-    resp = requests.post(
-        url,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "model": model,
-            "temperature": 0,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-        },
-        timeout=90,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    try:
-        return data["choices"][0]["message"]["content"].strip()
-    except Exception as e:
-        raise RuntimeError(f"Unexpected Kimi response: {data}") from e
+    max_retries = 4
+    for attempt in range(max_retries):
+        resp = requests.post(
+            url,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": model,
+                "temperature": 0,
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+            },
+            timeout=90,
+        )
+
+        if resp.status_code != 429:
+            resp.raise_for_status()
+            data = resp.json()
+            try:
+                return data["choices"][0]["message"]["content"].strip()
+            except Exception as e:
+                raise RuntimeError(f"Unexpected Kimi response: {data}") from e
+
+        # 429: exponential backoff with optional Retry-After support
+        retry_after = resp.headers.get("Retry-After")
+        if retry_after and retry_after.isdigit():
+            sleep_s = max(1, int(retry_after))
+        else:
+            sleep_s = 2 ** attempt
+        if attempt == max_retries - 1:
+            raise RuntimeError(f"Kimi rate limited (429) after retries: {resp.text[:300]}")
+        time.sleep(sleep_s)
+
+    raise RuntimeError("Kimi request failed unexpectedly")
 
 
 def translate_via_engine(text: str, src_lang: str, tgt_lang: str, engine: str) -> str:
