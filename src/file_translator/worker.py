@@ -3,9 +3,12 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
 from redis import Redis
 
 from .core import translate_file
+
+load_dotenv()
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0")
 QUEUE_KEY = "ft:jobs"

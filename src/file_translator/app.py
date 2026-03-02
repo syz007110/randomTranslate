@@ -8,11 +8,14 @@ from pathlib import Path
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
+from dotenv import load_dotenv
 from redis import Redis
 from starlette.requests import Request
 
 from .core import DB_PATH, translate_file
 from .db import connect, init_schema
+
+load_dotenv()
 
 app = FastAPI(title="File Translator UI", version="0.3.0")
 
