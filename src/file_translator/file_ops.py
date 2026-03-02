@@ -11,6 +11,8 @@ from docx import Document
 def _translate_many(texts: list[str], translate_fn, max_workers: int = 4) -> list[str]:
     if not texts:
         return []
+    if hasattr(translate_fn, "translate_many"):
+        return translate_fn.translate_many(texts, max_workers=max_workers)
     with ThreadPoolExecutor(max_workers=max_workers) as ex:
         return list(ex.map(translate_fn, texts))
 

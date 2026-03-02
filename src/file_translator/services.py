@@ -232,6 +232,76 @@ def _translate_kimi(text: str, src_lang: str, tgt_lang: str) -> str:
     raise RuntimeError("Kimi request failed unexpectedly")
 
 
+def _translate_kimi_batch(texts: list[str], src_lang: str, tgt_lang: str) -> list[str]:
+    api_key = os.getenv("KIMI_API_KEY")
+    if not api_key:
+        raise RuntimeError("KIMI_API_KEY is not set")
+
+    base_url = os.getenv("KIMI_BASE_URL", "https://api.moonshot.cn/v1").rstrip("/")
+    model = os.getenv("KIMI_MODEL", "moonshot-v1-8k")
+    url = f"{base_url}/chat/completions"
+
+    payload_items = [{"id": i, "text": t} for i, t in enumerate(texts)]
+
+    system_prompt = (
+        "You are a professional translation engine. "
+        "Translate each item's text from source language to target language accurately. "
+        "Return strict JSON only: {\"items\":[{\"id\":0,\"translation\":\"...\"}, ...]}"
+    )
+    user_prompt = (
+        f"source_language={src_lang}\n"
+        f"target_language={tgt_lang}\n"
+        f"items_json={json.dumps(payload_items, ensure_ascii=False)}"
+    )
+
+    max_retries = 4
+    for attempt in range(max_retries):
+        resp = requests.post(
+            url,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": model,
+                "temperature": 0,
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+            },
+            timeout=120,
+        )
+
+        if resp.status_code != 429:
+            resp.raise_for_status()
+            data = resp.json()
+            content = data["choices"][0]["message"]["content"].strip()
+            try:
+                obj = json.loads(content)
+                items = obj.get("items", [])
+                out = [""] * len(texts)
+                for it in items:
+                    idx = int(it["id"])
+                    if 0 <= idx < len(out):
+                        out[idx] = str(it.get("translation", ""))
+                # fallback fill for missing
+                for i, v in enumerate(out):
+                    if not v:
+                        out[i] = texts[i]
+                return out
+            except Exception as e:
+                raise RuntimeError(f"Unexpected Kimi batch response: {content[:500]}") from e
+
+        retry_after = resp.headers.get("Retry-After")
+        sleep_s = max(1, int(retry_after)) if retry_after and retry_after.isdigit() else 2 ** attempt
+        if attempt == max_retries - 1:
+            raise RuntimeError(f"Kimi rate limited (429) after retries: {resp.text[:300]}")
+        time.sleep(sleep_s)
+
+    raise RuntimeError("Kimi batch request failed unexpectedly")
+
+
 def translate_via_engine(text: str, src_lang: str, tgt_lang: str, engine: str) -> str:
     engine = (engine or "mock").lower()
     if engine == "mock":
@@ -241,3 +311,12 @@ def translate_via_engine(text: str, src_lang: str, tgt_lang: str, engine: str) -
     if engine in {"kimi", "llm_kimi"}:
         return _translate_kimi(text, src_lang, tgt_lang)
     raise RuntimeError(f"Unsupported engine: {engine}")
+
+
+def translate_many_via_engine(texts: list[str], src_lang: str, tgt_lang: str, engine: str) -> list[str]:
+    engine = (engine or "mock").lower()
+    if not texts:
+        return []
+    if engine in {"kimi", "llm_kimi"}:
+        return _translate_kimi_batch(texts, src_lang, tgt_lang)
+    return [translate_via_engine(t, src_lang, tgt_lang, engine) for t in texts]
