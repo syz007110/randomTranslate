@@ -80,7 +80,7 @@ def normalize_lang(lang: str) -> str:
     return mapping.get(l, l)
 
 
-def apply_glossary(conn: sqlite3.Connection, text: str, src_lang: str, tgt_lang: str, domain: str | None = None) -> str:
+def _load_glossary_rows(conn: sqlite3.Connection, src_lang: str, tgt_lang: str, domain: str | None = None):
     src_lang = normalize_lang(src_lang)
     tgt_lang = normalize_lang(tgt_lang)
     query = """
@@ -89,15 +89,51 @@ def apply_glossary(conn: sqlite3.Connection, text: str, src_lang: str, tgt_lang:
     JOIN term_lexeme ls ON ls.concept_id = c.id AND ls.lang=? AND ls.status='approved'
     JOIN term_lexeme lt ON lt.concept_id = c.id AND lt.lang=? AND lt.status='approved'
     WHERE (? IS NULL OR c.domain = ?)
-    ORDER BY ls.priority ASC, LENGTH(ls.text) DESC
+    ORDER BY LENGTH(ls.text) DESC, ls.priority ASC
     """
-    rows = conn.execute(query, (src_lang, tgt_lang, domain, domain)).fetchall()
+    return conn.execute(query, (src_lang, tgt_lang, domain, domain)).fetchall()
+
+
+def apply_glossary(conn: sqlite3.Connection, text: str, src_lang: str, tgt_lang: str, domain: str | None = None) -> str:
+    rows = _load_glossary_rows(conn, src_lang, tgt_lang, domain)
     out = text
     for r in rows:
         src_text, tgt_text = r["src_text"], r["tgt_text"]
         if not src_text or not tgt_text:
             continue
         out = re.sub(re.escape(src_text), tgt_text, out)
+    return out
+
+
+def apply_glossary_protected(conn: sqlite3.Connection, text: str, src_lang: str, tgt_lang: str, domain: str | None = None):
+    rows = _load_glossary_rows(conn, src_lang, tgt_lang, domain)
+    out = text
+    token_map = {}
+    idx = 0
+    for r in rows:
+        src_text, tgt_text = r["src_text"], r["tgt_text"]
+        if not src_text or not tgt_text:
+            continue
+        token = f"FTTERM{idx}"
+        new_out, count = re.subn(re.escape(src_text), token, out)
+        if count > 0:
+            token_map[token] = tgt_text
+            out = new_out
+            idx += 1
+    return out, token_map
+
+
+def restore_glossary_tokens(text: str, token_map: dict[str, str]) -> str:
+    out = text
+    for token, tgt in token_map.items():
+        # strict replace first
+        out = out.replace(token, tgt)
+        # tolerant replace for model-altered tokens, e.g. "_ FTTERM 12 _"
+        m = re.match(r"FTTERM(\d+)", token)
+        if m:
+            idx = m.group(1)
+            pattern = re.compile(rf"[_\s]*F\s*T\s*T\s*E\s*R\s*M\s*{idx}[_\s]*", re.IGNORECASE)
+            out = pattern.sub(tgt, out)
     return out
 
 
