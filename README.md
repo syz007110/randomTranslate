@@ -39,10 +39,15 @@ docker compose up --build -d
 
 ## Windows（原生 + Redis）
 1. 安装并启动 Redis（本机或可访问的 Redis）
-2. 在项目根目录执行：
+2. `.env` 中确保：
+```env
+REDIS_URL=redis://127.0.0.1:6379/0
+```
+> 不要写 `redis://redis:6379/0`（那是 Docker 容器内主机名）
+3. 在项目根目录执行：
 ```bat
 scripts\start-local.bat
 ```
-3. 访问：`http://127.0.0.1:8088`
+4. 访问：`http://127.0.0.1:8088`
 
 > 若 Redis/Worker 暂不可用，UI 会自动回退到同步翻译模式，仍可使用。
