@@ -22,10 +22,28 @@
         <input type="file" name="file" required />
 
         <label>源语言（src）</label>
-        <input name="src_lang" placeholder="zh-CN" required />
+        <select name="src_lang" required>
+          <option value="cn" selected>中文 (cn)</option>
+          <option value="en">English (en)</option>
+          <option value="ja">日本語 (ja)</option>
+          <option value="ko">한국어 (ko)</option>
+          <option value="fr">Français (fr)</option>
+          <option value="de">Deutsch (de)</option>
+          <option value="es">Español (es)</option>
+          <option value="ru">Русский (ru)</option>
+        </select>
 
         <label>目标语言（tgt）</label>
-        <input name="tgt_lang" placeholder="en" required />
+        <select name="tgt_lang" required>
+          <option value="en" selected>English (en)</option>
+          <option value="cn">中文 (cn)</option>
+          <option value="ja">日本語 (ja)</option>
+          <option value="ko">한국어 (ko)</option>
+          <option value="fr">Français (fr)</option>
+          <option value="de">Deutsch (de)</option>
+          <option value="es">Español (es)</option>
+          <option value="ru">Русский (ru)</option>
+        </select>
 
         <label>引擎（engine）</label>
         <select name="engine">

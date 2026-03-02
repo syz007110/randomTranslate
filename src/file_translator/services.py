@@ -67,7 +67,22 @@ def save_cache(conn: sqlite3.Connection, req: TranslationRequest, translated_tex
     conn.commit()
 
 
+def normalize_lang(lang: str) -> str:
+    l = (lang or "").strip().lower()
+    mapping = {
+        "zh": "cn",
+        "zh-cn": "cn",
+        "zh_cn": "cn",
+        "en-us": "en",
+        "en_us": "en",
+        "jp": "ja",
+    }
+    return mapping.get(l, l)
+
+
 def apply_glossary(conn: sqlite3.Connection, text: str, src_lang: str, tgt_lang: str, domain: str | None = None) -> str:
+    src_lang = normalize_lang(src_lang)
+    tgt_lang = normalize_lang(tgt_lang)
     query = """
     SELECT ls.text AS src_text, lt.text AS tgt_text
     FROM term_concept c
@@ -88,19 +103,6 @@ def apply_glossary(conn: sqlite3.Connection, text: str, src_lang: str, tgt_lang:
 
 def _translate_mock(text: str, src_lang: str, tgt_lang: str) -> str:
     return f"[{src_lang}->{tgt_lang}] {text}"
-
-
-def _map_xfyun_lang(lang: str) -> str:
-    l = (lang or "").lower()
-    mapping = {
-        "zh": "cn",
-        "zh-cn": "cn",
-        "zh_cn": "cn",
-        "en-us": "en",
-        "en_us": "en",
-        "jp": "ja",
-    }
-    return mapping.get(l, l)
 
 
 def _translate_xfyun(text: str, src_lang: str, tgt_lang: str) -> str:
@@ -134,8 +136,8 @@ def _translate_xfyun(text: str, src_lang: str, tgt_lang: str) -> str:
     query = urlencode({"authorization": authorization, "host": host, "date": date_str}, quote_via=quote)
     url = f"{endpoint}?{query}"
 
-    from_lang = _map_xfyun_lang(src_lang)
-    to_lang = _map_xfyun_lang(tgt_lang)
+    from_lang = normalize_lang(src_lang)
+    to_lang = normalize_lang(tgt_lang)
 
     body = {
         "header": {"app_id": app_id, "status": 3},

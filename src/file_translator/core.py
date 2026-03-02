@@ -11,6 +11,7 @@ from .services import (
     save_cache,
     translate_many_via_engine,
     translate_via_engine,
+    normalize_lang,
 )
 
 DB_PATH = Path.home() / ".file_translator" / "translator.db"
@@ -18,8 +19,8 @@ DB_PATH = Path.home() / ".file_translator" / "translator.db"
 
 class Translator:
     def __init__(self, src_lang: str, tgt_lang: str, engine: str, domain: str | None):
-        self.src_lang = src_lang
-        self.tgt_lang = tgt_lang
+        self.src_lang = normalize_lang(src_lang)
+        self.tgt_lang = normalize_lang(tgt_lang)
         self.engine = engine
         self.domain = domain
 
