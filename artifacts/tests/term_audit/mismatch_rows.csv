@@ -1,0 +1,44 @@
+line,source,translated,source_in_db,expected_count,expected_en,exact_expected_match,translated_is_any_db_en,translated_is_other_db_en,translated_not_in_db_en
+263,上海微创医疗机器人（集团）股份有限公司,"Shanghai Minimally Invasive Medical Robot (Group) Co., Ltd.",True,0,,False,False,False,True
+749,加长内窥镜穿刺器套管,Lengthen Endoscope Trocar Cannula.,True,0,,False,False,False,True
+750,加长器械穿刺器套管,Lengthen Instrument Trocar Cannula.,True,0,,False,False,False,True
+752,加长钝型内窥镜穿刺针,Lengthen Blunt Endoscope Trocar Puncture Needle.,True,0,,False,False,False,True
+754,加长钝型器械穿刺针,Lengthen Blunt Instrument Trocar Puncture Needle.,True,0,,False,False,False,True
+755,加长器械穿刺器套管（无气阀）,Extended Instrument Trocar Cannula (No Air Valve),True,0,,False,False,False,True
+774,器械穿刺器密封帽(5mm),Trocar Sealing Cap,True,1,"Trocar Sealing Cap
+Instrument Trocar Sealing Cap (5 mm)",False,False,False,True
+775,器械穿刺器密封帽（8mm）,Instrument Trocar Sealing Cap (5 mm),True,1,"Trocar Sealing Cap
+Instrument Trocar Sealing Cap (8 mm)",False,False,False,True
+776,内窥镜穿刺器密封帽（10mm）,Trocar Sealing Cap,True,1,"Trocar Sealing Cap
+Endoscope Trocar Sealing Cap (10 mm)",False,False,False,True
+777,一次性使用单极弧剪绝缘套及安装工具内包装,Instrument Trocar Sealing Cap (8 mm),True,1,Single Use Scissors Tip Cover Accessory,False,False,False,True
+778,包装信息,Trocar Sealing Cap,True,1,Packaging information,False,False,False,True
+779,包装描述,Endoscope Trocar Sealing Cap (10 mm),True,1,Packaging description,False,False,False,True
+780,腹腔内窥镜单孔手术系统,Single Use Scissors Tip Cover Accessory,True,1,Endoscopic Single-Port Surgical System,False,True,True,False
+781,三维电子弯管内窥镜,Packaging information,True,1,3D Electronic Curved Endoscope,False,True,True,False
+782,三维电子蛇形内窥镜,Packaging description,True,1,3D Electronic Serpentine Endoscope,False,True,True,False
+783,弯管内窥镜转接头,Endoscopic Single-Port Surgical System,True,1,Endoscope Adapter,False,True,True,False
+784,单极电钩,3D Electronic Curved Endoscope,True,1,Monopolar Cautery Hook,False,True,True,False
+785,双极鸭嘴抓钳,3D Electronic Serpentine Endoscope,True,1,Fenestrated Bipolar Forceps,False,True,True,False
+786,双极马里兰钳,Endoscope Adapter,True,1,Maryland Bipolar Forceps,False,True,True,False
+787,一次性使用器械保护套,Monopolar Cautery Hook,True,1,Single Use Instruments Tip Cover Accessory,False,True,True,False
+788,一次性使用内窥镜保护套,Fenestrated Bipolar Forceps,True,1,Single Use Endoscope Tip Cover Accessory,False,True,True,False
+789,一次性使用弧剪保护套,Maryland Bipolar Forceps,True,1,Single Use Scissors Tip Cover Accessory,False,True,True,False
+790,腹腔内窥镜单孔手术系统配套用穿刺器,Single Use Instruments Tip Cover Accessory,True,1,Matching Trocar for Endoscopic Single-Port Surgical System,False,True,True,False
+791,穿刺器套装,Single Use Endoscope Tip Cover Accessory,True,1,Trocar Set,False,True,True,False
+792,穿刺器外套管,Single Use Scissors Tip Cover Accessory,True,1,Trocar Outer Cannula,False,True,True,False
+793,穿刺器内套管,Matching Trocar for Endoscopic Single-Port Surgical System,True,1,Trocar Inner Cannula,False,True,True,False
+794,穿刺针,Trocar Set,True,1,Trocar Needle,False,True,True,False
+795,穿刺器附件,Trocar Outer Cannula,True,1,Trocar Accessory,False,True,True,False
+796,穿刺器外套管阻气阀,Trocar Inner Cannula,True,1,Trocar Air Valve of Outer Cannula,False,True,True,False
+797,穿刺器内套管阻气阀,Trocar Needle,True,1,Trocar Air Valve of Inner Cannula,False,True,True,False
+798,穿刺器内套管密封盖,Trocar Accessory,True,1,Trocar Sealing Cap of Inner Cannula,False,True,True,False
+799,内窥镜密封塞,Trocar Air Valve of Outer Cannula,True,1,Endoscope Sealing Plug,False,True,True,False
+800,手术器械密封塞,Trocar Air Valve of Inner Cannula,True,1,Surgical Instrument Sealing Plug,False,True,True,False
+801,直线型切割吻合器,Trocar Sealing Cap of Inner Cannula,True,1,Linear Cutting Stapler,False,True,True,False
+802,大血管闭合器,Endoscope Sealing Plug,True,1,Vessel Sealer,False,True,True,False
+803,强力双极电凝钳,Surgical Instrument Sealing Plug,True,1,Force Bipolar,False,True,True,False
+804,吲哚青绿,Linear Cutting Stapler,True,1,Indocyanine Green （ICG）,False,True,True,False
+805,荧光造影剂,Vessel Sealer,True,1,Fluorescent Contrast Agent,False,True,True,False
+806,远程通讯工作站,Force Bipolar,True,1,Telecommunication Workstation,False,True,True,False
+807,远程通讯平台,Indocyanine Green （ICG）,True,1,Telecommunication Platform,False,True,True,False

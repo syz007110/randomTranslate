@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>File Translator</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; }
+      .card { border: 1px solid #ddd; border-radius: 10px; padding: 16px; }
+      label { display:block; margin-top: 12px; font-weight: 600; }
+      input, select, button { margin-top: 6px; padding: 8px; width: 100%; box-sizing: border-box; }
+      button { cursor: pointer; }
+      .hint { color: #666; font-size: 13px; margin-top: 8px; }
+      #status { margin-top: 12px; }
+    </style>
+  </head>
+  <body>
+    <h2>File Translator</h2>
+    <div class="card">
+      <form id="taskForm">
+        <label>文件（docx/md/json/txt）</label>
+        <input type="file" name="file" required />
+
+        <label>源语言（src）</label>
+        <select name="src_lang" required>
+          <option value="cn" selected>中文 (cn)</option>
+          <option value="en">English (en)</option>
+          <option value="ja">日本語 (ja)</option>
+          <option value="ko">한국어 (ko)</option>
+          <option value="fr">Français (fr)</option>
+          <option value="de">Deutsch (de)</option>
+          <option value="es">Español (es)</option>
+          <option value="ru">Русский (ru)</option>
+        </select>
+
+        <label>目标语言（tgt）</label>
+        <select name="tgt_lang" required>
+          <option value="en" selected>English (en)</option>
+          <option value="cn">中文 (cn)</option>
+          <option value="ja">日本語 (ja)</option>
+          <option value="ko">한국어 (ko)</option>
+          <option value="fr">Français (fr)</option>
+          <option value="de">Deutsch (de)</option>
+          <option value="es">Español (es)</option>
+          <option value="ru">Русский (ru)</option>
+        </select>
+
+        <label>引擎（engine）</label>
+        <select name="engine">
+          <option value="xfyun" selected>xfyun（默认）</option>
+          <option value="llm_kimi">llm_kimi</option>
+          <option value="mock">mock（测试）</option>
+        </select>
+
+        <label>领域（domain，可选）</label>
+        <input name="domain" placeholder="surgical_robotics" />
+
+        <label>块级并发（max_workers）</label>
+        <input name="max_workers" type="number" min="1" max="16" value="4" />
+
+        <button type="submit">开始翻译</button>
+      </form>
+      <div id="status" class="hint">默认队列模式；若 Redis/Worker 不可用，会自动回退到同步模式。</div>
+    </div>
+
+    <script>
+      const form = document.getElementById('taskForm');
+      const statusDiv = document.getElementById('status');
+
+      async function downloadFromResponse(resp) {
+        const blob = await resp.blob();
+        const cd = resp.headers.get('content-disposition') || '';
+        const fileName = cd.includes('filename=') ? cd.split('filename=')[1].replaceAll('"','') : 'translated_output';
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(form);
+
+        // 1) try queue mode first
+        statusDiv.textContent = '队列任务提交中...';
+        try {
+          const resp = await fetch('/api/tasks', { method: 'POST', body: fd });
+          if (resp.ok) {
+            const data = await resp.json();
+            const taskId = data.task_id;
+            statusDiv.textContent = `任务已提交: ${taskId}`;
+
+            const timer = setInterval(async () => {
+              const r = await fetch(`/api/tasks/${taskId}`);
+              const s = await r.json();
+              statusDiv.textContent = `任务状态: ${s.status}`;
+              if (s.status === 'finished') {
+                clearInterval(timer);
+                window.location.href = `/api/tasks/${taskId}/download`;
+              }
+              if (s.status === 'failed') {
+                clearInterval(timer);
+                statusDiv.textContent = `任务失败: ${s.error || 'unknown error'}`;
+              }
+            }, 1500);
+            return;
+          }
+        } catch (_) {
+          // fall through
+        }
+
+        // 2) fallback to sync mode
+        statusDiv.textContent = '队列不可用，自动切换同步模式...';
+        const syncResp = await fetch('/translate', { method: 'POST', body: fd });
+        if (!syncResp.ok) {
+          const t = await syncResp.text();
+          statusDiv.textContent = `同步翻译失败：${t}`;
+          return;
+        }
+        await downloadFromResponse(syncResp);
+        statusDiv.textContent = '同步翻译完成，已开始下载。';
+      });
+    </script>
+  </body>
+</html>

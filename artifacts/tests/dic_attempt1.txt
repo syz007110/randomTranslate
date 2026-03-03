@@ -1,0 +1,816 @@
+2D/3D toggle
+3D vertical calibration
+3D horizontal calibration
+DP output
+HDMI output
+HDMI input
+PVC coil
+SDI output
+SDI input
+usb flash disk
+Windows Communications Development Platform
+installation tool
+button control
+white gown
+white balance
+white gauze
+package
+warranty
+Warnning information
+Warnning information menu
+brake
+backup power
+arm switching
+arm switching key
+arm joint
+calibrator
+identification
+morbid obesity
+menu operation
+reference index
+operation force feedback
+test plan
+test precondition
+test case
+product requirement specification
+ultrasound shears control
+ultrasound shears equipment
+ultrasound shears host
+flushing hole
+factory setting
+bleeding diathesis
+smoke removal
+smoke removal function
+touch control panel
+touchscreen
+trocar hole
+trocar
+trocar sealing cap
+trocar cannula
+sensor configuration link
+trocar
+disk space
+Slave Arm
+Slave Arm Picth Joint
+Slave Arm instruments
+slave
+Slave Driver
+large operating room
+standby key
+monopolar instrument
+single open automatic door
+current field
+current frame
+login menu
+login function
+equipotential terminal
+low temperature plasma sterilization
+HF intruments
+electric control box
+power display
+power indicator light
+electric energy equipment
+coagulation
+coagulation pedal
+coagulation intruments
+electric cutting
+electric cutting coagulation
+electric cutting pedal
+electric cutting intruments
+electrosurgery unit
+electrosurgery equipment
+power button
+boom
+pendant
+top plate
+positioning laser
+positioning device
+GIF
+tremble
+tiller
+rated optical working distance
+secondary menu
+2D monitor
+reflective object
+non-energy device
+buzzer
+armrest
+auxiliary room
+auxiliary control software
+Surgeon Console Auxiliary Control Software
+Surgical Cart Auxiliary Control Software
+auxiliary screen
+auxiliary display
+auxiliary equipment
+gynecological surgery
+accessory sterilizing tray
+abdominal cavity
+endoscope
+endoscopic surgery
+steel ruler
+advanced energy function
+HF intruments
+moist heat sterilization
+moist heat sterilizer
+isolation board
+instrument arm
+slave arm Driver box
+slave arm joint
+slave arm driver
+function
+function indicator light
+error code
+shutdown
+joint driver
+viewing lens
+admin menu
+admin setup
+light source
+silicone seal
+ghosting
+roller
+consumables
+black box testing
+beam
+infrared power switch
+nurse
+blur screen
+ethylene oxide sterilization
+Patient Cart
+robotic surgery
+robotic self test
+robotic arm
+robotic arm structure
+base bracket
+pedestal
+activation arm
+emergency stop
+integration test plan
+clamping force
+compatibility
+inspection mode
+scissors
+interactive interface
+interactive software
+interactive system
+pedal board
+caster
+pedal
+pedal
+footswitch panel base
+pedal
+footswitch panel
+clean operating room
+structural properties
+emergency stop button
+contraindication
+Endoscope
+unresponsive
+opening and closing movement
+power on
+boot auto-start function
+watchdog
+Usability
+disk burner
+control ratio
+control arm
+control interactive software
+control precision adjustment
+control software
+control software sub-system
+control handle
+console armrest
+control system
+control sub-system
+rapid self-test
+cold light source
+clutch key
+clutch pedal
+clutch switch
+clutch status
+hand control clutch
+force presentation
+force sensing switch
+force feedback mechanism
+historical information
+3D monitor
+3D endoscope
+3D image
+column
+brightness
+brightness adjustment
+recording function
+anesthesia machine
+urological surgery
+password input keyboard
+stopwatch
+sterilizer
+eyepiece
+eyepiece cushion
+endoscope
+endoscope arm
+endoscope calibrator
+endoscope trocar
+endoscope image
+endoscope control
+endoscopic surgery
+endoscopic surgical robot
+Endoscopic Surgical System
+Endoscopic Surgical System
+Endoscopic Surgical System control software
+Endoscopic Imaging Processor
+Endoscopic Imaging Processor
+endoscopic surgery
+endoscope sterilizing tray
+endoscope adapter
+energy instrument
+energy output safety
+energy output identification
+Take Photo
+configuration file
+pelvic cavity
+collision barrier
+apron
+polarized 3D video
+polarized glasses
+general surgery
+startup menu
+pneumoperitoneum
+pneumoperitoneum machine
+instrument trocar
+instrument housing
+instrument control
+instrument position indication
+instrument display
+instrument sterilizing tray
+stopwatch
+millimeter stopwatch timer
+intracavity image
+driver control software
+ergonomic adjustment
+ergonomic settings
+pregnancy
+flexible control
+flexible reset
+software version
+three-arm surgery
+3D monitor
+3D Electronic Endoscope
+3D Electronic Endoscope
+3D Electronic Endoscope
+color balance
+color balance strip
+Shanghai Minimally Invasive Medical Robot (Group) Co., Ltd.
+upper quick settings
+host computer
+host computer display software
+setup function
+setup menu
+social acceptance
+body mass index
+upgrade program
+voice control
+time display
+enable
+scope of use
+preferences
+field of view (FOV)
+field of view quality
+field of view center angle resolution
+visual end system
+visual feedback
+visual subsystem
+visual trolley
+visual display tool arm
+visual subsystem
+video broadcast
+direction of view (DOV)
+indications
+scope of application
+surgical marker function
+operating bed
+surgical assistant
+surgical robot
+surgery start
+surgical instrument
+instrument housing
+surgical confirmation
+surgical approach
+operating room
+operating room pendant
+surgical trolley
+surgical trolley end
+surgical trolley network
+surgical access
+surgical withdrawal
+surgical information entry menu
+surgical order
+surgical assistant
+life
+output interface
+input interface
+input folder
+intraoperative ultrasound
+intraoperative imaging assistance
+digital zoom
+Bipolar Forceps
+bipolar instrument
+double automatic door
+double encoder
+driver
+speed over limit
+speed over limit detection
+speed deviation
+locking device
+screen-lock function
+trolley base
+trolley handrail
+trolley structure
+trolley adjustment
+trolley adjustment interface
+trolley movement
+trolley movement interface
+extra large operating room
+energy notification bar
+notice information
+debug function
+adjust button
+adjustment arm
+adjustment function
+adjustment force
+jump to trolley adjustment menu
+jump to trolley movement menu
+jump to main menu
+communication function
+head laser
+distal end
+head rest
+image acquisition logic software
+image acquisition software
+image car
+image car display
+image processing logic software
+Imaging Processor
+image processing software
+image processing and interactive software
+Endoscopic Imaging Processor
+image interactive software
+image search
+image drive logic software
+image display interactive software
+image display software
+image rotation
+image host
+team basic services
+exterior view
+network connection display
+Medbot
+Medbot company
+position over limit
+position over limit detection
+position deviation
+Sterile Drape
+sterile isolation plate
+sterile storage area
+physical properties
+item storage rack
+system initialization
+system standby
+system beep alerts
+system shutdown
+system enable
+system self-check
+lower quick settings
+slave commputer
+display
+monitor
+cable
+keypad
+small operating room
+performance
+thoracic cavity
+thoracic surgery
+repair hole
+virtual force border
+virtual force border control
+suspension and adjust arms
+cantilever
+vascular enhancement
+prototype
+disposable installation tool
+one-click shutdown
+one-click retraction
+one-click expand and collapse
+surgeon touchcreen
+surgeon console
+surgeon console
+surgeon console
+surgeon console
+volume adjustment
+User Needs
+effective depth of field
+validity period
+effective frame rate
+right-eye mode
+right-eye view
+language settings
+motion control software
+expand
+lighting change rate
+actuator
+command speed
+command position
+finger cuff
+rack
+medium operating room
+master-slave control
+master-slave ready
+chief surgeon
+host column
+master arm
+master arm structure
+master arm driver
+main screen
+master arm
+driver
+master arm double encoder
+master arm pose
+main suspension
+master station
+auxiliary power switch
+gripping force
+gripping force
+status light
+postural following
+postural joint
+sub-suspension
+automation equipment specifications
+self-test
+self-test track
+corridor
+left-eye mode
+left-eye view
+switch left/right view
+Hardware fault
+Ergonomic adjustment fault
+Ergonomic adjustment fault
+Exceed the motion deviation limit
+Abnormal movement
+Unexpected motion
+Abnormal operation
+Unexpected motion during ergonomic adjustment
+Unexpected motion during ergonomic adjustment
+Exceed ergonomic position limit
+Exceed ergonomic position limit
+position over limit
+Too fast operation
+Self-test failed
+Arm is blocked
+Arm is blocked
+Arm is blocked
+Exceed torque limit
+Arm disable failed
+Arm enable failed
+Arm enabling
+Arm enable failed
+Arm is disabled
+Automatic ergonomic adjustment failed
+Automatic ergonomic adjustment failed
+Set arm fault
+Network fault
+Hardware fault
+Battery fault
+Surgeon console needs to be repaired
+Emergency stop switch is triggered
+Waiting for the patient cart to recover
+Patient cart power failure
+Insufficient disk space
+Patient cart failure
+Battery fault
+Battery fault
+Battery needs to be replaced
+Reach the upper position limit
+Reach the lower position limit
+Master arm reaches the position limit
+3D-Viewer reaches the height limit
+Power fault
+Pedal failure
+Pedal failure
+Cannot switch to the arm with no instrument
+Instrument is dismounted
+The master arm pose does not match the slave arm
+Hardware fault
+Hardware fault
+Surgical trolley motion obstructed
+Left instrument reaches the position boundary
+Right instrument reaches the position boundary
+Left instrument reaches the rotation boundary
+Over the speed limit
+Right instrument reaches the rotation boundary
+The instrument is too high
+Instrument adapter is failed to be mounted
+Instrument is failed to be mounted
+Endoscope is failed to be mounted
+Exceed the usage limit of instrument
+The endoscope adapter can be used less than 5 times
+The endoscope adapter usage wil be exhausted， please replace it
+Endoscope is mounted on not-allowed arm
+Just single ultrasonic knife is supported
+Left instrument reaches the depth boundary
+Right instrument reaches the depth boundary
+Left instrument reaches the pose boundary
+Right instrument reaches the pose boundary
+Pedal signal is not activated
+Just single monopolar instrument is supported
+Just single bipolar instrument is supported
+Excessive rotation deviation
+Ultrasonic knife is activated for too long
+Do not rotate the rotation joint during ultrasonic knife is activated
+Endoscope reaches position boundary
+Lower master arm or raise 3D-viewer before self-testing
+Lower master arm or raise 3D-viewer before self-testing
+Please check the clutch signal
+Low Battery
+Exceed the usage limit of trocar
+Don't mount the same type energy insruments
+Slave arm 1 unable to output energy when Multiple bipolar mounted
+Slave arm 4 unable to output energy when Multiple bipolar mounted
+Clutch is triggered for more than 1 minute
+Endoscope connection abnormal
+Please remount the instrument adapter
+Energy activing
+In ergonomic adjustment process
+Ergonomic adjustment denied
+Hardware fault
+Endoscope controller communication fault
+Trocar connection failed
+Trocar is not installed
+Please contact customer service
+Slave arm auto adjusting
+Poor network quality
+Base released fail
+Base locked fail
+Abnormal support oil pressure
+Poor network quality
+Poor network quality
+Medium network quality
+Average network quality
+Local terminal fault
+Local terminal Log out
+Switch control to local terminal
+Switch control to remote terminal
+Switch control to remote terminal
+Please check network settings
+Please check the verification code
+Network is connected
+The network is disconnected
+Please take over before shutdown
+Please take over before shutdown
+Communication workstation error
+The communication of the remote communication workstation is abnormal
+The TSA software version is incompatible
+Data exception
+False control data
+Abnormal communication
+Master arm is failed to be stowed
+Deploy failed
+Stow failed
+Motor fault
+Motor fault
+False control data
+Running information reading timed out
+CPU is overloaded
+Pedal signal disconnected
+Motor driver failure
+Abnormal image
+Endoscope disconnected
+USB flash disk connection abnormality
+Insufficient endoscope controller disk space
+Endoscope controller CPU is overloaded
+Insufficient USB flash disk space
+Out-Sync Image
+Poor 3D effect display effect
+Aero desktop started failed
+USB flash disk unauthorized
+Energy platform connection failed
+Endoscope type identification failed
+Exhausted battery
+Low Battery
+Endoscope parameters are being configured
+Right and left instrument reaches the rotation boundary
+The software version is inconsistent
+Switch to the remote system
+Switch to the local system
+Not Connect to patient cart
+Disconnect with patient cart
+Instrument is blocked
+Please take off the instrument
+Please take off the adapter
+Please install the adapter
+Master back to zero fail
+Failed to reverse
+The patient cart cannot be adjusted in the current status.
+Please operate on the patient cart
+Fail to Calculate Instrument Life
+Exceed the motion deviation limit
+Network not connect
+Wait for the self-test to end
+Exit adjustment first
+Exit surgical confirmed state first
+Exit clutch control first
+Exit master-slave control first
+Exit endoscope control first
+Serial port abnormal
+Failed to set image parameter
+The instrument is too far from the center of the field of view
+Please adjust the distance between arm {0} and arm {1}
+Failed to configure image parameter
+Endoscope controller startup abnormal
+Failed to configure endoscope controller interface
+Failed to restart
+Unexpected motion of slave arm
+unexpected motion of master arm
+False control data
+Exceed the speed limit
+Abnormal operation
+Network fault
+Over the position upper limit
+Over the position lower limit
+The agent software is abnormal
+Local TSA fault
+Video codec fault
+Master arm is failed to be stowed
+Motor fault
+Circuit board undervoltage
+Abnormal image acquisition
+3D vision link interrupted
+Uncontinuous Image
+Please contact customer service
+Failed to transfer parameters
+Failed to verify parameters
+Click REMOVE to restore
+Please contact customer service
+Ignorable
+attention
+Please move back
+Please retry
+Please manually adjust
+Please contact customer service
+Please restart system
+Please check UPS status
+Please start patient cart
+Please raise the 3D-viewer
+Please lower master arm
+Please relax hold on the hand control to continue
+Only energy instrument can be activated
+Please lower armrest or raise master arm before self-testing
+Please lower armrest or raise master arm before self-testing
+Please dismount instrument and adapter before self-testing
+Please adjust the height downwards
+please replace
+Please click START on the patient cart
+Please step on correct pedal
+Please adjust foot angle
+Please release adjustment button
+Please release shoulder adjustment button
+Please release shoulder adjustment button
+Please match grips on control by rotating the grip
+Plese match grips on control by squeezing
+Please release pedal
+Please exit the instrument height memory mode
+Please login
+Please zoom in
+Please zoom out
+Please rotate endoscope clockwise
+Please rotate endoscope counterclockwise
+Please adjust endoscope downward
+Please check arm switch pedal
+Please check clutch pedal
+Please check endoscope pedal
+Check left cut pedal
+Check left coag pedal
+Check right cut pedal
+Check right coag pedal
+Check slave arm adjustment button
+Please check head-in sensor
+Check left foot sensor
+Check right foot sensor
+Please finish the adjustment before self-testing
+Please replace it
+Please reinsert the endoscope
+Please remount it
+Please don't move the master arm
+Please put head in the 3D viewer
+Please back to the main page
+Please release the energy pedal
+Please keep your hands on the armrests
+No surgery allowed
+Operation not recommended
+Please operate slowly with caution
+Please operate slowly
+Please restart endoscope controller
+Please replace it
+Please reinsert the endoscope
+Please use it after authentication
+Please replace the endoscope
+Please check adapter
+Please check instrument， and reinstall adapter
+Please check the connection status
+Please reset
+Please check communication cable
+Please contact customer service
+Please restart endoscope controller
+Please check
+Please reconnect
+Needle Driver
+Micro Needle Driver
+Fenestrated Bipolar Forceps
+Monopolar Curved Scissors
+Maryland Bipolar Forceps
+Permanent Cautery Spatula
+Large Needle Driver
+Claw Forceps
+Cadiere Forceps
+Strong Cadiere Forceps
+Ultrasound Shears
+Tenaculum Forceps
+Large Scissors Needle Driver
+Medium-Large Clip Applier
+Large Clip Applier
+Small Monopolar Cautery Hook
+Small Scissors Needle Driver
+3D Electronic Endoscope
+3D Electronic Endoscope
+Instrument Arm Sterile Drape
+
+Column Sterile Drape
+
+Force Presentation Trocar Puncture Needle
+Force Presentation Trocar Cannula
+Instrument Trocar Cannula
+Lengthen Endoscope Trocar Cannula.
+Lengthen Instrument Trocar Cannula.
+Instrument Trocar Cannula (No Air Valve)
+Lengthen Blunt Endoscope Trocar Puncture Needle.
+Blunt Endoscope Trocar Puncture Needle
+Lengthen Blunt Instrument Trocar Puncture Needle.
+Extended Instrument Trocar Cannula (No Air Valve)
+Blunt Instrument Trocar Puncture Needle
+Endoscope Trocar Cannula
+Trocar Adapter
+Trocar Adapter
+endoscope sterilizing tray
+accessory sterilizing tray
+instrument sterilizing tray
+Bipolar HF Instrument Cord
+Monopolar HF Instrument Cord
+Monopolar HF Instrument Cord
+Emergency Release Tool
+Endoscope Calibrator
+endoscope adapter
+Endoscopic Surgical System
+Patient Platform
+Surgeon Console
+Vision Platform
+Endoscopic Imaging Processor
+Trocar Sealing Cap
+Instrument Trocar Sealing Cap (5 mm)
+
+Trocar Sealing Cap
+Instrument Trocar Sealing Cap (8 mm)
+
+Trocar Sealing Cap
+Endoscope Trocar Sealing Cap (10 mm)
+
+Single Use Scissors Tip Cover Accessory
+
+Packaging information
+Packaging description
+Endoscopic Single-Port Surgical System
+3D Electronic Curved Endoscope
+3D Electronic Serpentine Endoscope
+Endoscope Adapter
+Monopolar Cautery Hook
+Fenestrated Bipolar Forceps
+Maryland Bipolar Forceps
+Single Use Instruments Tip Cover Accessory
+Single Use Endoscope Tip Cover Accessory
+Single Use Scissors Tip Cover Accessory
+Matching Trocar for Endoscopic Single-Port Surgical System
+Trocar Set
+Trocar Outer Cannula
+Trocar Inner Cannula
+Trocar Needle
+Trocar Accessory
+Trocar Air Valve of Outer Cannula
+Trocar Air Valve of Inner Cannula
+Trocar Sealing Cap of Inner Cannula
+Endoscope Sealing Plug
+Surgical Instrument Sealing Plug
+Linear Cutting Stapler
+Vessel Sealer
+Force Bipolar
+Indocyanine Green （ICG）
+Fluorescent Contrast Agent
+Telecommunication Workstation
+Telecommunication Platform

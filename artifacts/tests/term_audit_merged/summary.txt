@@ -1,0 +1,17 @@
+source_non_empty=807
+translated_non_empty_raw=810
+translated_non_empty_merged=807
+source_unique=782
+db_cn_unique=782
+db_en_unique=737
+source_unique_in_db_cn=782
+source_unique_not_in_db_cn=0
+translated_unique=733
+db_en_appearing_in_translation=727
+line_exact_matches=801
+line_mismatches=6
+line_mismatches_with_no_expected_en=6
+db_en_unused_in_translation=10
+legacy_hit_matched=727
+legacy_hit_total=1521
+legacy_hit_rate=47.80%

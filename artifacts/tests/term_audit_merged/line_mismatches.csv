@@ -1,0 +1,7 @@
+line,source,translated,source_in_db,expected_en,expected_count,exact_match,translated_in_db_en
+263,上海微创医疗机器人（集团）股份有限公司,"Shanghai Minimally Invasive Medical Robot (Group) Co., Ltd.",True,,0,False,False
+749,加长内窥镜穿刺器套管,Lengthen Endoscope Trocar Cannula.,True,,0,False,False
+750,加长器械穿刺器套管,Lengthen Instrument Trocar Cannula.,True,,0,False,False
+752,加长钝型内窥镜穿刺针,Lengthen Blunt Endoscope Trocar Puncture Needle.,True,,0,False,False
+754,加长钝型器械穿刺针,Lengthen Blunt Instrument Trocar Puncture Needle.,True,,0,False,False
+755,加长器械穿刺器套管（无气阀）,Extended Instrument Trocar Cannula (No Air Valve),True,,0,False,False

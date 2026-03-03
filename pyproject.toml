@@ -1,0 +1,33 @@
+[project]
+name = "file-translator"
+version = "0.1.0"
+description = "Format-preserving file translator (docx/md/json/txt)"
+requires-python = ">=3.10"
+dependencies = [
+  "python-docx>=1.1.0",
+  "fastapi>=0.115.0",
+  "uvicorn>=0.30.0",
+  "jinja2>=3.1.0",
+  "python-multipart>=0.0.9",
+  "redis>=5.0.0",
+  "requests>=2.31.0",
+  "python-dotenv>=1.0.1",
+]
+
+[project.scripts]
+file-translator = "file_translator.cli:main"
+file-translator-web = "file_translator.app:run"
+file-translator-worker = "file_translator.worker:run"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+file_translator = ["templates/*.html"]
