@@ -1,17 +1,7 @@
-# Python
+.venv_tmp/
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-*.egg-info/
-.venv/
-.venv_test/
-
-# Secrets
 .env
-.env.*
+*.db
+artifacts/tests/
 
-# OS/editor
-.DS_Store
-.vscode/
-.idea/
