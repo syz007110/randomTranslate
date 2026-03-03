@@ -1,0 +1,13 @@
+{
+  "title": "翻译质量检查",
+  "description": "用于测试JSON字符串翻译。",
+  "items": [
+    "U盘",
+    "控制软件",
+    "电凝器械"
+  ],
+  "metadata": {
+    "note": "请保留JSON键名不变",
+    "owner": "测试团队"
+  }
+}

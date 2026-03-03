@@ -7,7 +7,8 @@ from .db import connect, init_schema
 from .file_ops import translate_docx, translate_json, translate_md, translate_txt
 from .services import (
     TranslationRequest,
-    apply_glossary,
+    apply_glossary_protected,
+    restore_glossary_tokens,
     lookup_exact_glossary_term,
     get_cached,
     save_cache,
@@ -43,8 +44,11 @@ class Translator:
             if cached is not None:
                 return cached
 
-            glossed = apply_glossary(conn, text, src_lang=self.src_lang, tgt_lang=self.tgt_lang, domain=self.domain)
-            translated = translate_via_engine(glossed, self.src_lang, self.tgt_lang, self.engine)
+            glossed, token_map = apply_glossary_protected(
+                conn, text, src_lang=self.src_lang, tgt_lang=self.tgt_lang, domain=self.domain
+            )
+            translated_raw = translate_via_engine(glossed, self.src_lang, self.tgt_lang, self.engine)
+            translated = restore_glossary_tokens(translated_raw, token_map)
             save_cache(conn, req, translated)
             return translated
         finally:
@@ -54,6 +58,7 @@ class Translator:
         # 1) cache/glossary preprocess
         pending_idx = []
         pending_texts = []
+        pending_token_maps: dict[int, dict[str, str]] = {}
         out = [""] * len(texts)
 
         conn = connect(DB_PATH)
@@ -83,9 +88,12 @@ class Translator:
                     out[i] = exact
                     continue
 
-                glossed = apply_glossary(conn, text, src_lang=self.src_lang, tgt_lang=self.tgt_lang, domain=self.domain)
+                glossed, token_map = apply_glossary_protected(
+                    conn, text, src_lang=self.src_lang, tgt_lang=self.tgt_lang, domain=self.domain
+                )
                 pending_idx.append(i)
                 pending_texts.append(glossed)
+                pending_token_maps[i] = token_map
         finally:
             conn.close()
 
@@ -98,7 +106,9 @@ class Translator:
             # 3) save cache + fill output
             conn2 = connect(DB_PATH)
             try:
-                for i, src_text, translated in zip(pending_idx, [texts[k] for k in pending_idx], translated_pending):
+                for i, src_text, translated_raw in zip(pending_idx, [texts[k] for k in pending_idx], translated_pending):
+                    token_map = pending_token_maps.get(i, {})
+                    translated = restore_glossary_tokens(translated_raw, token_map)
                     req = TranslationRequest(
                         text=src_text,
                         src_lang=self.src_lang,
